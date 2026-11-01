@@ -9,7 +9,7 @@
   panel=document.createElement('aside');panel.setAttribute('aria-label','本次访问连接检查');panel.style.cssText='position:fixed;bottom:16px;right:16px;left:16px;max-width:360px;margin-left:auto;background:#fbfcf8;color:#415449;border:1px solid #dce5d5;border-radius:12px;padding:16px;z-index:9999;font:14px/20px system-ui;box-shadow:0 8px 24px #0001';
   const title=document.createElement('strong');title.textContent='本次访问连接检查';status=document.createElement('p');status.setAttribute('role','status');status.style.cssText='margin:12px 0;white-space:pre-wrap';retryButton=document.createElement('button');retryButton.type='button';retryButton.textContent='重新检查';retryButton.style.cssText='padding:8px 12px;background:#dce6df;color:#415449;border-radius:8px;font:14px/20px system-ui';retryButton.onclick=()=>send();panel.append(title,status,retryButton);document.body.appendChild(panel);
  }
- const note=text=>{if(status)status.textContent=text;};
+ let receiptCode='';const note=text=>{if(status)status.textContent=text+(receiptCode?'\n本次请求编号：'+receiptCode:'');};
  if(navigator.doNotTrack==='1'||navigator.globalPrivacyControl===true){note('浏览器启用了不跟踪设置，本次访问不会记入统计。');if(retryButton)retryButton.disabled=true;return;}
  function uuid(){
   if(typeof crypto!=='undefined'&&typeof crypto.randomUUID==='function')return crypto.randomUUID();
@@ -18,6 +18,7 @@
  }
  let referrer='';try{const url=new URL(document.referrer);if(['http:','https:'].includes(url.protocol))referrer=url.origin;}catch{}
  const event={id:uuid(),page,referrer},payload=JSON.stringify(event),base='https://lin-a-quiet-space.linlizi051023.chatgpt.site/api/visits/';
+ receiptCode=event.id;
  function imageFallback(){return new Promise((resolve,reject)=>{
   pixel=new Image();pixel.referrerPolicy='origin';const timer=setTimeout(()=>{pixel=null;reject(Error('连接超时'));},12000);
   pixel.onload=()=>{clearTimeout(timer);pixel=null;resolve();};pixel.onerror=()=>{clearTimeout(timer);pixel=null;reject(Error('无法连接记录服务'));};
