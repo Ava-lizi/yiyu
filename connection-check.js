@@ -21,8 +21,8 @@
    status.textContent='公开服务已连通，正在检查测试请求能否往返…';
    const nonce='check_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2),result=await request({method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'connection-check',nonce})});
    if(result.nonce!==nonce)throw Error('测试编号未匹配，暂不能确认连接。');
-   title.textContent='连接正常。';status.textContent='这台设备已成功完成连接与发送测试。没有保存留言或访客记录；下一步才会迁移后台。';
-  }catch(error){title.textContent='连接还没有通过。';status.textContent=(error.message||'暂时无法访问测试服务。')+' 正式网站尚未切换，请把这行提示告诉我。';}
+   title.textContent='连接正常。';status.textContent='这台设备已成功完成连接与发送测试。这次检测没有保存留言或访客记录。';
+  }catch(error){title.textContent='连接还没有通过。';status.textContent=(error.message||'暂时无法访问测试服务。')+' 当前设备暂未连通后台；请保留留言原文，并把这行提示告诉站主。';}
   finally{checking=false;button.disabled=false;button.textContent='重新检测';}
  }
  button.onclick=check;check();
