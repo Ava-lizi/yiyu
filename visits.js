@@ -17,7 +17,7 @@
   bytes[6]=(bytes[6]&15)|64;bytes[8]=(bytes[8]&63)|128;const hex=Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');return hex.slice(0,8)+'-'+hex.slice(8,12)+'-'+hex.slice(12,16)+'-'+hex.slice(16,20)+'-'+hex.slice(20);
  }
  let referrer='';try{const url=new URL(document.referrer);if(['http:','https:'].includes(url.protocol))referrer=url.origin;}catch{}
- const event={id:uuid(),page,referrer},payload=JSON.stringify(event),base='https://lin-a-quiet-space.linlizi051023.chatgpt.site/api/visits/';
+ const event={id:uuid(),page,referrer},payload=JSON.stringify(event),base='https://lkvtnmsfivdrfcflzsyx.supabase.co/functions/v1/yiyu-api/api/visits/';
  receiptCode=event.id;
  function imageFallback(){return new Promise((resolve,reject)=>{
   pixel=new Image();pixel.referrerPolicy='origin';const timer=setTimeout(()=>{pixel=null;reject(Error('连接超时'));},12000);
@@ -34,7 +34,7 @@
    const exchange=fetch(base+'events',options).then(response=>{if(!response.ok)throw Error('服务连接失败');return response.json();});const data=await Promise.race([exchange,timeout]);
    if(data.reason==='privacy'){note('浏览器启用了不跟踪设置，本次访问不会记入统计。');return;}
    if(data.reason==='automation'){note('自动化测试访问已跳过，不会混入真实访客。');return;}
-   if(data.ok!==true)throw Error('未确认送达');note('已确认：本次访问已记入。\n可在管理员端刷新查看。');
+   if(data.ok!==true||data.id!==event.id)throw Error('未确认送达');note('已确认：本次访问已记入。\n可在管理员端刷新查看。');
   }catch{clearTimeout(timer);
    try{note('正在使用兼容方式确认…');await imageFallback();note('已确认：本次访问已记入。\n可在管理员端刷新查看。');}
    catch{note('网页已打开，但访问记录服务未连通。\n请把这行提示告诉站主。');}
